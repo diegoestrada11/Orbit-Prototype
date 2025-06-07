@@ -1,0 +1,52 @@
+# Visual Studio & Windows
+.vs/          
+*.suo         
+*.user        
+*.userosscache
+*.VC.db       
+*.VC.opendb   
+
+# Build outputs
+**/Debug/
+**/Release/
+**/x64/Debug/
+**/x64/Release/
+
+# Executables and object files
+*.exe
+*.dll
+*.lib
+*.obj
+*.o
+*.a
+*.pdb
+*.ilk
+*.idb
+
+# Build logs & intermediate files
+*.log
+*.tlog/
+*.lastbuildstate
+*.lpdb
+*.cache
+*.iobj
+
+# IntelliSense & precompiled headers
+*.ipch
+*.pch
+*.tli
+*.tlh
+
+
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+build/
+*.bak
+*.swp
+*.tmp
+*.log
+*.tlg
+*.db
+*.vsix
