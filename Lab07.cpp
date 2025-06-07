@@ -12,44 +12,36 @@
  *****************************************************************/
 
 #include <cassert>      // for ASSERT
+#include <cmath>
+
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
-#include "position.h"      // for POINT
-#include "velocity.h"   // for VELOCITY
-#include "acceleration.h" // for ACCELERATION
+#include "position.h"   // for Position
+#include "velocity.h"   // for Velocity
+#include "acceleration.h" // for Acceleration
 #include "test.h"
-#include <cmath>
+
 using namespace std;
 
-<<<<<<< Updated upstream
 static constexpr double PI = 3.14159265358979323846;
-=======
 static constexpr double HOURS_PER_DAY = 24.0;
 static constexpr double MINUTES_PER_HOUR = 60.0;
 static constexpr double SIMULATOR_FPS = 30.0;
-
-static constexpr double TIME_DILATION =
-   (HOURS_PER_DAY * MINUTES_PER_HOUR * 60.0) / MINUTES_PER_HOUR;
-
+static constexpr double TIME_DILATION = (HOURS_PER_DAY * MINUTES_PER_HOUR * 60.0) / MINUTES_PER_HOUR;
 static constexpr double DT = TIME_DILATION / SIMULATOR_FPS;
-
 static constexpr double EARTH_RADIUS = 6378000.0;
->>>>>>> Stashed changes
 
 /*************************************************************************
  * Demo
- * Test structure to capture the LM that will move around the screen
+ * Holds all positions and state for a frame-by-frame orbit sim
  *************************************************************************/
 class Demo
 {
 public:
    Demo(Position ptUpperRight)
-      : ptUpperRight(ptUpperRight),
-      orbitRadiusPixels(ptUpperRight.getPixelsX() * 0.4),
-      angleEarth(0.0)
+      : ptUpperRight(ptUpperRight)
    {
-<<<<<<< Updated upstream
-=======
+      // Random initial placement of various satellites
       ptHubble.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
       ptHubble.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
@@ -71,130 +63,100 @@ public:
       ptStar.setPixelsX(ptUpperRight.getPixelsX() * random(-0.5, 0.5));
       ptStar.setPixelsY(ptUpperRight.getPixelsY() * random(-0.5, 0.5));
 
+      // Initial angles and animation phase
       angleShip = 0.0;
       angleEarth = 0.0;
       phaseStar = 0;
 
+      // Geostationary orbit initial conditions
       ptGEO.setMeters(0.0, 42164000.0);
-
       velocityGEO.setDX(-3100.0);
       velocityGEO.setDY(0.0);
->>>>>>> Stashed changes
    }
 
+   // Positions of all objects
+   Position ptHubble;
+   Position ptSputnik;
+   Position ptStarlink;
+   Position ptCrewDragon;
+   Position ptShip;
+   Position ptGPS;
+   Position ptStar;
    Position ptUpperRight;
-<<<<<<< Updated upstream
-   double    orbitRadiusPixels;
-   double    angleEarth;
-=======
    Position ptGEO;
 
-   unsigned char phaseStar;
-
-   double angleShip;
-   double angleEarth;
-
-   Velocity velocityGEO;
-   
->>>>>>> Stashed changes
+   unsigned char phaseStar;    // animation frame for star flicker
+   double angleShip;           // rotation for ships/satellites
+   double angleEarth;          // rotation of Earth texture
+   Velocity velocityGEO;       // current GEO satellite velocity
 };
 
 /*************************************
- * All the interesting work happens here, when
- * I get called back from OpenGL to draw a frame.
- * When I am finished drawing, then the graphics
- * engine will wait until the proper amount of
- * time has passed and put the drawing on the screen.
+ * callBack()
+ * Called each frame: handle input, update physics, then draw.
  **************************************/
 void callBack(const Interface* pUI, void* p)
 {
    Demo* pDemo = static_cast<Demo*>(p);
 
-<<<<<<< Updated upstream
-   // Advance the orbit angle
-=======
-   // accept input
+   // 1) Handle user input (move the ship)
+   if (pUI->isUp())    pDemo->ptShip.addPixelsY(1.0);
+   if (pUI->isDown())  pDemo->ptShip.addPixelsY(-1.0);
+   if (pUI->isLeft())  pDemo->ptShip.addPixelsX(-1.0);
+   if (pUI->isRight()) pDemo->ptShip.addPixelsX(1.0);
 
-   // move by a little
-   if (pUI->isUp())
-      pDemo->ptShip.addPixelsY(1.0);
-   if (pUI->isDown())
-      pDemo->ptShip.addPixelsY(-1.0);
-   if (pUI->isLeft())
-      pDemo->ptShip.addPixelsX(-1.0);
-   if (pUI->isRight())
-      pDemo->ptShip.addPixelsX(1.0);
+   // 2) Update Earth rotation (1 sim-day = 60s real @30fps ‚Üí 1800 frames)
+   pDemo->angleEarth += 2 * PI / (SIMULATOR_FPS * 60.0);
 
-   // perform all the game logic
-   pDemo->angleEarth += 2 * M_PI / (SIMULATOR_FPS * 60.0);
-
-   // 2) Compute gravity on GEO sat:
+   // 3) Gravity-based centripetal acceleration for GEO satellite
    double x = pDemo->ptGEO.getMetersX();
    double y = pDemo->ptGEO.getMetersY();
    double r = sqrt(x * x + y * y);
-   if (r > EARTH_RADIUS)      // only if above surface
+   if (r > EARTH_RADIUS)
    {
-      double ux = -x / r, uy = -y / r;
-      // choose either GM/r≤ or g0 * (Re≤/r≤):
+      double ux = -x / r;
+      double uy = -y / r;
       double a_mag = 9.81 * (EARTH_RADIUS * EARTH_RADIUS) / (r * r);
-
       Acceleration a;
       a.setDDX(ux * a_mag);
       a.setDDY(uy * a_mag);
       pDemo->velocityGEO.add(a, DT);
    }
-   else
-   {
-      // burned up!  handle removalÖ
-   }
 
+   // 4) Advance GEO position by its velocity
    pDemo->ptGEO.addMetersX(pDemo->velocityGEO.getDX() * DT);
    pDemo->ptGEO.addMetersY(pDemo->velocityGEO.getDY() * DT);
 
+   // 5) Advance other animations
+   pDemo->angleShip += 0.02;
+   pDemo->phaseStar++;
 
-   // rotate the earth
->>>>>>> Stashed changes
-   pDemo->angleEarth += 0.01;
-   if (pDemo->angleEarth > 2 * PI)
-      pDemo->angleEarth -= 2 * PI;
+   // 6) Draw everything
+   Position pt;
+   ogstream gout(pt);
 
-<<<<<<< Updated upstream
-   // Compute satellite position
-   Position satPos = rotate(
-      Position(0.0, 0.0),
-      pDemo->orbitRadiusPixels,
-      0.0,
-      pDemo->angleEarth
-   );
-=======
-   // draw everything
->>>>>>> Stashed changes
+   gout.drawCrewDragon(pDemo->ptCrewDragon, pDemo->angleShip);
+   gout.drawHubble(pDemo->ptHubble, pDemo->angleShip);
+   gout.drawSputnik(pDemo->ptSputnik, pDemo->angleShip);
+   gout.drawStarlink(pDemo->ptStarlink, pDemo->angleShip);
+   gout.drawShip(pDemo->ptShip, pDemo->angleShip, pUI->isSpace());
+   gout.drawGPS(pDemo->ptGPS, pDemo->angleShip);
 
-   // Draw
-   Position scratch;
-   ogstream gout(scratch);
-
-   gout.drawSputnik(satPos, 0.0);
-
-<<<<<<< Updated upstream
-   scratch.setMeters(0.0, 0.0);
-   gout.drawEarth(scratch, pDemo->angleEarth);
-=======
-   // draw parts
+   // Draw parts offset from each object
    pt.setPixelsX(pDemo->ptCrewDragon.getPixelsX() + 20);
    pt.setPixelsY(pDemo->ptCrewDragon.getPixelsY() + 20);
-   gout.drawCrewDragonRight(pt, pDemo->angleShip); // notice only two parameters are set
+   gout.drawCrewDragonRight(pt, pDemo->angleShip);
    pt.setPixelsX(pDemo->ptHubble.getPixelsX() + 20);
    pt.setPixelsY(pDemo->ptHubble.getPixelsY() + 20);
-   gout.drawHubbleLeft(pt, pDemo->angleShip);      // notice only two parameters are set
+   gout.drawHubbleLeft(pt, pDemo->angleShip);
    pt.setPixelsX(pDemo->ptGPS.getPixelsX() + 20);
    pt.setPixelsY(pDemo->ptGPS.getPixelsY() + 20);
-   gout.drawGPSCenter(pt, pDemo->angleShip);       // notice only two parameters are set
+   gout.drawGPSCenter(pt, pDemo->angleShip);
    pt.setPixelsX(pDemo->ptStarlink.getPixelsX() + 20);
    pt.setPixelsY(pDemo->ptStarlink.getPixelsY() + 20);
-   gout.drawStarlinkArray(pt, pDemo->angleShip);   // notice only two parameters are set
+   gout.drawStarlinkArray(pt, pDemo->angleShip);
 
-   // draw fragments
+   // Fragments
    pt.setPixelsX(pDemo->ptSputnik.getPixelsX() + 20);
    pt.setPixelsY(pDemo->ptSputnik.getPixelsY() + 20);
    gout.drawFragment(pt, pDemo->angleShip);
@@ -202,20 +164,19 @@ void callBack(const Interface* pUI, void* p)
    pt.setPixelsY(pDemo->ptShip.getPixelsY() + 20);
    gout.drawFragment(pt, pDemo->angleShip);
 
-   // draw a single star
+   // Star flicker
    gout.drawStar(pDemo->ptStar, pDemo->phaseStar);
 
-   // draw the earth
+   // Draw Earth at center
    pt.setMeters(0.0, 0.0);
    gout.drawEarth(pt, pDemo->angleEarth);
 
-   // draw the GEO satellite
+   // GEO satellite
    gout.drawHubble(pDemo->ptGEO, 0.0);
->>>>>>> Stashed changes
 }
 
 /*********************************
- * Initialize the simulation and set it in motion
+ * main()
  *********************************/
 #ifdef _WIN32_X
 #include <windows.h>
@@ -224,18 +185,19 @@ int WINAPI wWinMain(
    _In_opt_ HINSTANCE hPrevInstance,
    _In_ PWSTR pCmdLine,
    _In_ int nCmdShow)
-#else // !_WIN32
+#else
 int main(int argc, char** argv)
-#endif // !_WIN32
+#endif
 {
    testRunner();
 
    Position ptUpperRight;
-   ptUpperRight.setPixelsX(500.0);
-   ptUpperRight.setPixelsY(500.0);
+   ptUpperRight.setZoom(128000.0 /* 128km equals 1 pixel */);
+   ptUpperRight.setPixelsX(1000.0);
+   ptUpperRight.setPixelsY(1000.0);
 
-   Interface ui(argc, argv,
-      "Single‚ÄêSatellite Orbit Simulator",
+   Interface ui(0, NULL,
+      "Demo",
       ptUpperRight);
 
    Demo demo(ptUpperRight);
