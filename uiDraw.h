@@ -12,6 +12,7 @@
 
 #pragma once
 
+
 #include <string>     // To display text on the screen
 #include <cmath>      // for M_PI, sin() and cos()
 #include <algorithm>  // used for min() and max()
@@ -24,6 +25,10 @@ using std::max;
 
 
 #define GL_SILENCE_DEPRECATION
+
+Position rotate(const Position& center,
+   double x, double y,
+   double rotation);
 
 /*************************************************************************
  * GRAPHICS STREAM
@@ -186,5 +191,3 @@ public:
  ****************************************************************/
 int    random(int    min, int    max);
 double random(double min, double max);
-
-

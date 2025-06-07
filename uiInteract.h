@@ -39,7 +39,7 @@ public:
    {
       initialize(argc, argv, title, ptUpperRight);
    }
-   
+
    // Destructor, in case any housecleaning needs to occur
    ~Interface();
 

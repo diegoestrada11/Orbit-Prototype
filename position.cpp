@@ -53,3 +53,5 @@ std::istream& operator >> (std::istream& in, Position& pt)
 
    return in;
 }
+
+double Position::metersFromPixels = 40.0;

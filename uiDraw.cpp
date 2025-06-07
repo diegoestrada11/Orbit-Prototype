@@ -1,4 +1,4 @@
-/***********************************************************************
+﻿/***********************************************************************
  * Source File:
  *    User Interface Draw : put pixels on the screen
  * Author:
@@ -993,8 +993,5 @@ double random(double min, double max)
 
    return num;
 }
-
-
-
 
 
