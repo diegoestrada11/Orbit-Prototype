@@ -1,8 +1,8 @@
 /***********************************************************************
  * Source File:
- *    Point : The representation of a position on the screen
+ *    Position : The representation of a position on the screen
  * Author:
- *    Br. Helfrich
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    Everything we need to know about a location on the screen.
  ************************************************************************/

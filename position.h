@@ -7,8 +7,6 @@
  *    Everything we need to know about a location on the screen
  *    or the location on the field.
  ************************************************************************/
-
-
 #pragma once
 
 #include <iostream> 
@@ -19,8 +17,7 @@ class Acceleration;
 class Velocity;
 
 /*********************************************
- * Position
- * A single position on the field in Meters  
+ * POSITION
  *********************************************/
 class Position
 {

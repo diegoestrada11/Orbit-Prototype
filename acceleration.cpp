@@ -2,32 +2,31 @@
  * Source File:
  *    ACCELERATION
  * Author:
- *    Br. Helfrich
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
- *    Everything we need to know about changing speed
  ************************************************************************/
 
 #include "acceleration.h"
-#include "angle.h"
 #include <cmath>
+using namespace std;
 
- /*********************************************
-  * ACCELERATION : ADD
-  *  a += a
-  *********************************************/
-void Acceleration::add(const Acceleration& acceleration)
+/*********************************************
+ * add()
+ *   Add another acceleration vector to this one.
+ *********************************************/
+void Acceleration::add(const Acceleration& rhs)
 {
-   ddx += acceleration.getDDX();
-   ddy += acceleration.getDDY();
+   ddx += rhs.ddx;
+   ddy += rhs.ddy;
 }
 
 /*********************************************
- * ACCELERATION : SET
- *  set from angle and direction
+ * set()
+ *   Set via magnitude and angle (angle in radians).
  *********************************************/
-void Acceleration::set(const Angle& angle, const double magnitude)
+void Acceleration::set(const Angle& angle, double magnitude)
 {
-   double radians = angle.getRadians();
-   this->ddx = sin(radians) * magnitude;
-   this->ddy = cos(radians) * magnitude;
+   double r = angle.getRadians();
+   ddx = sin(r) * magnitude;
+   ddy = cos(r) * magnitude;
 }

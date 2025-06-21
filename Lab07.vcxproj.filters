@@ -39,6 +39,39 @@
     <ClCompile Include="angle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="testPosition.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testVelocity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testAngle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testSatellite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="body.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="satellite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testSputnik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sputnik.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="orbitSimulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testAcceleration.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test.h">
@@ -66,6 +99,36 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="angle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testVelocity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testAngle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testBody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testSatellite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="body.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="satellite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testSputnik.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sputnik.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="orbitSimulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="testAcceleration.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

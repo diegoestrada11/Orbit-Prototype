@@ -7,9 +7,7 @@
  ************************************************************************/
 
 #pragma once
-
 #define _USE_MATH_DEFINES
-
 #include <cmath>
 #include <math.h>
 
@@ -47,7 +45,7 @@ public:
    }
 
 private:
-   double radians;   // 360 degrees equals 2 PI radians   
+   double radians;   
    double normalize(double radians)  const;
    double convertToDegrees(double r) const
    {
@@ -57,7 +55,6 @@ private:
 
    double convertToRadians(double degrees) const
    {
-      // remember 180 and pi.
       return normalize(degrees * ((M_PI + M_PI) / 360.0));
    }
 };

@@ -2,13 +2,19 @@
  * Source File:
  *    Test : Test runner
  * Author:
- *    Br. Helfrich
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    The test runner for all the unit tests
  ************************************************************************/
 
 #include "test.h"
 #include "testPosition.h"
+#include "testVelocity.h"
+#include "testBody.h"
+#include "testSatellite.h"
+#include "testSputnik.h"
+#include "testAngle.h"
+#include "testAcceleration.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -30,4 +36,10 @@ void testRunner()
 #endif // _WIN32
 
    TestPosition().run();
+   TestVelocity().run();
+   TestAngle().run();
+   TestSatellite().run();
+   TestSputnik().run();
+   TestBody().run();
+   TestAcceleration().run();
 }

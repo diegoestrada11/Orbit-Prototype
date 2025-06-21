@@ -2,7 +2,7 @@
  * Source File:
  *    VELOCITY
  * Author:
- *    Br. Helfrich
+ *    Natalia Navarrete, Diego Estrada
  * Summary:
  *    Everything we need to know about speed
  ************************************************************************/
@@ -13,7 +13,6 @@
 
  /*********************************************
    * VELOCITY : ADD
-   *  v = v_0 + a t
  *********************************************/
 void Velocity::add(const Acceleration& acceleration, double time)
 {
@@ -23,9 +22,8 @@ void Velocity::add(const Acceleration& acceleration, double time)
 
 /*********************************************
  * VELOCITY : SET
- *  set from angle and direction
  *********************************************/
-void Velocity::set(const Angle& angle, double magnitude)
+void Velocity::set(double magnitude, const Angle& angle)
 {
    double radians = angle.getRadians();
    dx = sin(radians) * magnitude;

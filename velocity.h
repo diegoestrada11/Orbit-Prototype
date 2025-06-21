@@ -1,45 +1,47 @@
 /***********************************************************************
  * Header File:
- *    VELOCITY
+ *    Velocity
  * Author:
  *    Natalia Navarrete, Diego Estrada
  * Summary:
- *    
+ *    Everything we need to know about a velocity on the screen.
  ************************************************************************/
+
+#include <cmath>
+#include "angle.h"
+#include "acceleration.h"
 #pragma once
+class TestVelocity;
 
-#include <math.h>
-
-// for add()
-class Acceleration;
-class Angle;
 
 /*********************************************
-* Velocity
-*********************************************/
+ * Velocity
+ *********************************************/
 class Velocity
 {
+   friend class TestVelocity;
 
 public:
-   // constructors
+   // Constructors
    Velocity() : dx(0.0), dy(0.0) {}
    Velocity(double dx, double dy) : dx(dx), dy(dy) {}
 
-   // getters
-   double getDX()    const { return dx; }
-   double getDY()    const { return dy; }
-   double getSpeed() const { return sqrt((dx * dx) + (dy * dy)); }
+   // Getters
+   double getDx()    const { return dx; }
+   double getDy()    const { return dy; }
+   double getSpeed() const { return sqrt(dx * dx + dy * dy); }
 
-   // setters
-   void set(const Angle& angle, double magnitude);
+   // Setters
+   void set(double magnitude, const Angle& angle);
+
    void add(const Acceleration& acceleration, double time);
-   void setDX(double dx) { this->dx = dx; }
-   void setDY(double dy) { this->dy = dy; }
-   void addDX(double dx) { this->dx += dx; }
-   void addDY(double dy) { this->dy += dy; }
+
+   void setDx(double dx) { this->dx = dx; }
+   void setDy(double dy) { this->dy = dy; }
+   void addDx(double dx) { this->dx += dx; }
+   void addDy(double dy) { this->dy += dy; }
 
 private:
-   double dx;           // horizontal velocity
-   double dy;           // vertical velocity
+   double dx;  // horizontal velocity
+   double dy;  // vertical velocity
 };
-

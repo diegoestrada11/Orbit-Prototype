@@ -1,19 +1,2 @@
 ﻿  acceleration.cpp
-C:\Users\nnavh\OneDrive\Desktop\cse231\Orbit-Prototype\acceleration.h(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  (compiling source file 'acceleration.cpp')
-  
-  angle.cpp
-  Lab07.cpp
-C:\Users\nnavh\OneDrive\Desktop\cse231\Orbit-Prototype\acceleration.h(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  (compiling source file 'Lab07.cpp')
-  
-  position.cpp
-  test.cpp
-  uiDraw.cpp
-  uiInteract.cpp
-  velocity.cpp
-C:\Users\nnavh\OneDrive\Desktop\cse231\Orbit-Prototype\acceleration.h(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  (compiling source file 'velocity.cpp')
-  
-  Generating Code...
   Lab07.vcxproj -> C:\Users\nnavh\OneDrive\Desktop\cse231\Orbit-Prototype\x64\Debug\Lab07.exe
