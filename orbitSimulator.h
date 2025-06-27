@@ -41,6 +41,10 @@ public:
 
 private:
    Position bounds;   // view bounds
-   Sputnik  sputnik;  // our single satellite
+   Sputnik sputnik;
+   Sputnik gps;
+   Sputnik hubble;
+   Sputnik starlink;
+   Sputnik iss;
 };
 

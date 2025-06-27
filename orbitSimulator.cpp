@@ -19,12 +19,28 @@ static constexpr double EARTH_RADIUS = 6.378e6;  // meters
 OrbitSimulator::OrbitSimulator(const Position& bounds)
    : bounds(bounds)
 {
-   // Geostationary orbit: radius = 42164000 m from Earth's center
-   const double geoRadius = 42164000.0;
-   // Initial position at (0, geoRadius)
-   sputnik.setPosition(Position(0.0, geoRadius));
-   // Geostationary orbital speed ~3100 m/s, moving westward (-x direction)
-   sputnik.setVelocity(Velocity(-3100.0, 0.0));
+	// Earth center position
+	Position earthCenter(0.0, 0.0);
+
+	// Sputnik (Geostationary)
+	sputnik.setPosition(Position(0.0, 42164000.0));
+	sputnik.setVelocity(Velocity(-3100.0, 0.0));
+
+	// GPS (~20200 km altitude)
+	gps.setPosition(Position(0.0, EARTH_RADIUS + 20200000.0));
+	gps.setVelocity(Velocity(-3870.0, 0.0));
+
+	// Hubble (~569 km altitude)
+	hubble.setPosition(Position(0.0, EARTH_RADIUS + 569000.0));
+	hubble.setVelocity(Velocity(-7700.0, 0.0));
+
+	// Starlink (~550 km altitude)
+	starlink.setPosition(Position(0.0, EARTH_RADIUS + 550000.0));
+	starlink.setVelocity(Velocity(-7750.0, 0.0));
+
+	// ISS (~408 km altitude)
+	iss.setPosition(Position(0.0, EARTH_RADIUS + 408000.0));
+	iss.setVelocity(Velocity(-7700.0, 0.0));
 }
 
 void OrbitSimulator::input(const Interface* pUI)
@@ -35,14 +51,23 @@ void OrbitSimulator::input(const Interface* pUI)
 
 void OrbitSimulator::display()
 {
-   // Advance physics and orientation
-   sputnik.update(DT);
+	// Time step
+	sputnik.update(DT);
+	gps.update(DT);
+	hubble.update(DT);
+	starlink.update(DT);
+	iss.update(DT);
 
-   // Draw Earth at center
-   Position center(0.0, 0.0);
-   ogstream gout(center);
-   gout.drawEarth(center, 0.0);
+	Position center(0.0, 0.0);
+	ogstream gout(center);
 
-   // Draw Sputnik
-   sputnik.draw();
+	// Draw Earth
+	gout.drawEarth(center, 0.0);
+
+	// Draw all satellites
+	sputnik.draw();
+	gps.draw();
+	hubble.draw();
+	starlink.draw();
+	iss.draw();
 }

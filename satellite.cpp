@@ -89,3 +89,4 @@ void Satellite::draw() const
 {
    //
 }
+
