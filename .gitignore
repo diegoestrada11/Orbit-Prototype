@@ -1,12 +1,15 @@
 # Visual Studio & Windows
-.vs/          
-*.suo         
-*.user        
+.vs/
+*.suo
+*.user
 *.userosscache
-*.VC.db       
-*.VC.opendb   
+*.VC.db
+*.sln.docstates
+*.VC.opendb
 
-# Build outputs
+# Build
+bin/
+obj/
 **/Debug/
 **/Release/
 **/x64/Debug/
@@ -22,6 +25,7 @@
 *.pdb
 *.ilk
 *.idb
+*.tlog
 
 # Build logs & intermediate files
 *.log
