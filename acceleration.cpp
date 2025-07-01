@@ -26,7 +26,7 @@ void Acceleration::add(const Acceleration& rhs)
  *********************************************/
 void Acceleration::set(const Angle& angle, double magnitude)
 {
-   double r = angle.getRadians();
+   double r = angle.toRadians();
    ddx = sin(r) * magnitude;
    ddy = cos(r) * magnitude;
 }

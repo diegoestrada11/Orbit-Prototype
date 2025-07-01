@@ -1,6 +1,6 @@
 /***********************************************************************
  * Header File:
- *    TestPosition : Test the Position class
+ *    TestPosition
  * Author:
  *    Natalia Navarrete and Diego Estrada
  * Summary:
@@ -11,10 +11,10 @@
 #include "position.h"
 #include "unitTest.h"
 
- /*******************************
+ /************************************************************************
   * TEST Position
   * A friend class for Position which contains the Position unit tests
-  ********************************/
+  ************************************************************************/
 class TestPosition : public UnitTest
 {
 public:

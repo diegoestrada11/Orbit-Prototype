@@ -14,10 +14,6 @@
 #include "uiInteract.h" // for INTERFACE
 #include "uiDraw.h"     // for RANDOM and DRAW*
 #include "position.h"   // for Position
-#include "velocity.h"   // for Velocity
-#include "acceleration.h" // for Acceleration
-#include "satellite.h"  // for Satellite
-#include "sputnik.h"
 #include "orbitSimulator.h"
 #include "test.h"
 

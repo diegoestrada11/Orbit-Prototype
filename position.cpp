@@ -1,6 +1,6 @@
 /***********************************************************************
  * Source File:
- *    Position : The representation of a position on the screen
+ *    Position
  * Author:
  *    Natalia Navarrete, Diego Estrada
  * Summary:

@@ -1,6 +1,6 @@
 /***********************************************************************
 * Header File:
-*    Test Angle : Test the Angle class
+*    Test Angle
 * Author:
 *    Natalia Navarrete, Diego Estrada
 * Summary:
@@ -12,88 +12,23 @@
 #include "angle.h"
 #include "unitTest.h"
 
-/*******************************
+/************************************************************************
 * TEST Angle
 * A friend class for Angle which contains the Angle unit tests
-********************************/
-class TestAngle : public UnitTest
-{
+*************************************************************************/
+class TestAngle : public UnitTest {
 public:
-   void run()
-   {
-      // Constructor
-      construct_default();
-
-      // Setters
-      setDegrees();
-      setRadians();
-      setFromRadians();
-
-      // Getters
-      getDegrees();
-      getRadians();
-
-      // Normalization
-      normalizeAbove360();
-      normalizeNegative();
-
-      report("Angle");
-   }
+   void run();
 
 private:
-   /*********************************************
-   * name:    DEFAULT CONSTRUCTOR
-   * input:   none
-   * output:  degrees=0, radians=0
-   *********************************************/
-   void construct_default();
-
-   /*********************************************
-   * name:    SET DEGREES
-   * input:   degrees=180
-   * output:  getDegrees()==180
-   *********************************************/
-   void setDegrees();
-
-   /*********************************************
-   * name:    SET RADIANS
-   * input:   radians=M_PI
-   * output:  getRadians()==M_PI
-   *********************************************/
-   void setRadians();
-
-   /*********************************************
-   * name:    SET FROM RADIANS
-   * input:   atan2(-1,0)
-   * output:  getDegrees()==270
-   *********************************************/
-   void setFromRadians();
-
-   /*********************************************
-   * name:    GET DEGREES
-   * input:   degrees set
-   * output:  getDegrees() returns input
-   *********************************************/
-   void getDegrees();
-
-   /*********************************************
-   * name:    GET RADIANS
-   * input:   radians set
-   * output:  getRadians() returns input
-   *********************************************/
-   void getRadians();
-
-   /*********************************************
-   * name:    NORMALIZE ABOVE 360°
-   * input:   degrees=450
-   * output:  getDegrees()==90
-   *********************************************/
-   void normalizeAbove360();
-
-   /*********************************************
-   * name:    NORMALIZE NEGATIVE
-   * input:   degrees=-90
-   * output:  getDegrees()==270
-   *********************************************/
-   void normalizeNegative();
+   void test_defaultConstructor();        // default radians = 0
+   void test_parameterConstructorNormalize(); // normalization to [0,2pi)
+   void test_fromDegrees();               // conversion from degrees
+   void test_toDegrees();                 // conversion to degrees
+   void test_setRadians();                // setter normalization
+   void test_setDegrees();                // setter in degrees
+   void test_rotateBy();                  // rotate within and beyond 2pi
+   void test_fromVector();                // build from vector using atan2
+   void test_sinCos();                    // sin() and cos() reflect internal radians
+   void test_operators();                 // +, -, +=, -= operators
 };

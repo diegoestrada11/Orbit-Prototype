@@ -1,10 +1,11 @@
 /***********************************************************************
- * Header File:
- *    ANGLE
- * Author:
- *       Natalia Navarrete, Diego Estrada
- * Summary:
- ************************************************************************/
+  * Header File:
+  *    Acceleration : The representation of a acceleration on the screen
+  * Author:
+  *    Natalia Navarrete, Diego Estrada
+  * Summary:
+  *    Everything we need to know about an angle on the screen.
+  ************************************************************************/
 
 #pragma once
 #define _USE_MATH_DEFINES
@@ -13,48 +14,51 @@
 
 using namespace std;
 
-/************************************
+/****************************************************************
  * ANGLE
- ************************************/
+ ****************************************************************/
 class Angle
 {
 public:
-
    // Constructors
    Angle() : radians(0.0) {}
-   Angle(const Angle& rhs) : radians(rhs.radians) {}
-   Angle(double degrees) { setDegrees(degrees); }
-
-   // Getters
-   double getDegrees() const { return convertToDegrees(radians); }
-   double getRadians() const { return radians; }
-
-   // Setters
-   void setRadians(double radians) { this->radians = normalize(radians); }
-   void setDegrees(double degrees) { radians = convertToRadians(degrees); }
-   void setUp() { radians = 0.0; }
-   void setDown() { radians = M_PI; }
-   void setRight() { radians = M_PI_2; }
-   void setLeft() { radians = M_PI + M_PI_2; }
-   void reverse() { radians = M_PI_2 + M_PI; }
-
-   Angle& add(double delta)
-   {
-      radians = normalize(radians + delta);
-      return *this;
+   explicit Angle(double rad) : radians(normalize(rad)) {}
+   static Angle fromDegrees(double deg) {
+      return Angle(normalize(deg * (M_PI / 180.0)));
    }
+
+   static Angle fromVector(double dx, double dy) {
+      return Angle(atan2(dx, dy));
+   }
+
+   // Get in radians or degrees
+   double  toRadians() const { return radians; }
+   double  toDegrees() const { return radians * (180.0 / M_PI); }
+
+   // Set via radians or degrees
+   void    setRadians(double r) { radians = normalize(r); }
+   void    setDegrees(double d) { radians = normalize(d * (M_PI / 180.0)); }
+
+   // Rotate by an offset (in radians)
+   Angle& rotateBy(double deltaRad) { radians = normalize(radians + deltaRad); return *this; }
+   Angle   rotated(double deltaRad) const { return Angle(radians + deltaRad); }
+
+   // Unit vector for thrust/projectile direction
+   double  sin() const { return std::sin(radians); }
+   double  cos() const { return std::cos(radians); }
+
+   // Operators for convenience
+   Angle   operator+(const Angle& rhs) const { return Angle(radians + rhs.radians); }
+   Angle& operator+=(const Angle& rhs) { return rotateBy(rhs.radians); }
+   Angle   operator-(const Angle& rhs) const { return Angle(radians - rhs.radians); }
+   Angle& operator-=(const Angle& rhs) { return rotateBy(-rhs.radians); }
 
 private:
-   double radians;   
-   double normalize(double radians)  const;
-   double convertToDegrees(double r) const
-   {
-      double normalizedRadians = normalize(r);
-      return normalizedRadians * (180.0 / M_PI);
-   }
+   double radians;
 
-   double convertToRadians(double degrees) const
-   {
-      return normalize(degrees * ((M_PI + M_PI) / 360.0));
+   // Keep everything in [0, 2)
+   static double normalize(double r) {
+      r = fmod(r, 2 * M_PI);
+      return (r < 0 ? r + 2 * M_PI : r);
    }
 };

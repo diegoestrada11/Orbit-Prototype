@@ -25,7 +25,7 @@ void Velocity::add(const Acceleration& acceleration, double time)
  *********************************************/
 void Velocity::set(double magnitude, const Angle& angle)
 {
-   double radians = angle.getRadians();
+   double radians = angle.toRadians();
    dx = sin(radians) * magnitude;
    dy = cos(radians) * magnitude;
 }

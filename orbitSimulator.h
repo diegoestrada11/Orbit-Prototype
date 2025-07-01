@@ -4,47 +4,43 @@
  * Author:
  *    Natalia Navarrete, Diego Estrada
  * Summary:
- *    Everything we need to know about a body on the screen.
+ *    Everything we need to know about the orbit simulator bodies on the screen.
  ************************************************************************/
-
 #pragma once
-#include "position.h"
-#include "velocity.h"
-#include "acceleration.h"
+
+#include "body.h"
 #include "sputnik.h"
+#include "gps.h"
+#include "hubble.h"
+#include "starlink.h"
+#include "crewDragon.h"
+#include "ship.h"
+#include "earth.h"
+#include "uiInteract.h"
+#include "uiDraw.h"
 
-#include "uiInteract.h"   // for Interface
-#include "uiDraw.h"       // for ogstream, drawEarth
+#include <vector>
 
-/**
- * OrbitSimulator
- *   Encapsulates a single Sputnik satellite orbiting Earth.
- */
+ /***********************************************************************
+  * OrbitSimulator Class
+  ************************************************************************/
 class OrbitSimulator
 {
 public:
-   /**
-    * Constructor
-    *   bounds: window bounds (zoom & pixel dimensions)
-    */
    OrbitSimulator(const Position& bounds);
+   ~OrbitSimulator();
 
-   /**
-    * Handle user input (unused for now)
-    */
    void input(const Interface* pUI);
-
-   /**
-    * Update physics and render scene
-    */
    void display();
 
 private:
-   Position bounds;   // view bounds
-   Sputnik sputnik;
-   Sputnik gps;
-   Sputnik hubble;
-   Sputnik starlink;
-   Sputnik iss;
+   Position               viewBounds;
+   vector<Body*>     bodies;
+
+   // Helpers
+   void    advanceAll(double dt);
+   void    handleCollisions();
+   void    removeExpired();
 };
+
 

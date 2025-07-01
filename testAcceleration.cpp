@@ -6,143 +6,123 @@
  * Summary:
  *    All the unit tests for Acceleration
  ************************************************************************/
- // TestAcceleration.cpp
 #include "TestAcceleration.h"
 #include <cmath>
 
-/*****************************************
- * run()
- *****************************************/
-void TestAcceleration::run()
-{
-   construct_default();
-   construct_param();
-   getDDX();
-   getDDY();
-   setDDX();
-   setDDY();
-   addDDX();
-   addDDY();
-   add_acceleration();
-   set_from_angle();
-
+void TestAcceleration::run() {
+   test_defaultConstructor();
+   test_paramConstructor();
+   test_getDDXDDY();
+   test_setDDXDDY();
+   test_addDDXDDY();
+   test_addVector();
+   test_setMagnitudeAngle();
    report("Acceleration");
 }
 
-/*****************************************
- * Test DEFAULT CONSTRUCTOR
- *   input:  none
- *   output: ddx = 0.0, ddy = 0.0
- *****************************************/
-void TestAcceleration::construct_default()
-{
+/******************************************************
+* TEST DEFAULT CONSTRUCTOR
+* verify that Acceleration() initializes to zero
+*******************************************************/
+void TestAcceleration::test_defaultConstructor() {
+   // Setup
    Acceleration a;
-   assertEquals(a.getDDX(), 0.0);
-   assertEquals(a.getDDY(), 0.0);
+   // Exercise
+   double dx = a.getDDX();
+   double dy = a.getDDY();
+   // Verify
+   assertEquals(dx, 0.0);
+   assertEquals(dy, 0.0);
+   // Teardown
 }
 
-/*****************************************
- * Test PARAMETERIZED CONSTRUCTOR
- *****************************************/
-void TestAcceleration::construct_param()
-{
-   Acceleration a(3.5, -2.2);
-   assertEquals(a.getDDX(), 3.5);
-   assertEquals(a.getDDY(), -2.2);
+/******************************************************
+* TEST PARAMETER CONSTRUCTOR
+* verify that Acceleration(double ddx, double ddy) initializes
+*******************************************************/
+void TestAcceleration::test_paramConstructor() {
+   // Setup & Exercise
+   Acceleration a(1.5, -2.5);
+   // Verify
+   assertEquals(a.getDDX(), 1.5);
+   assertEquals(a.getDDY(), -2.5);
+   // Teardown
 }
 
-/*****************************************
- * Test GET DDX
- *****************************************/
-void TestAcceleration::getDDX()
-{
+/******************************************************
+* TEST GETDDXDDY
+* verify that getDDX() and getDDY() return correct values
+*******************************************************/
+void TestAcceleration::test_getDDXDDY() {
+   // Setup
+   Acceleration a(3.0, 4.0);
+   // Exercise & Verify
+   assertEquals(a.getDDX(), 3.0);
+   assertEquals(a.getDDY(), 4.0);
+   // Teardown
+}
+
+/******************************************************
+* TEST SET DDXDDY
+* verify that setDDX() and setDDY() set values correctly
+*******************************************************/
+void TestAcceleration::test_setDDXDDY() {
+   // Setup
    Acceleration a;
-   a.setDDX(4.4);
-   assertEquals(a.getDDX(), 4.4);
+   // Exercise
+   a.setDDX(-1.1);
+   a.setDDY(2.2);
+   // Verify
+   assertEquals(a.getDDX(), -1.1);
+   assertEquals(a.getDDY(), 2.2);
+   // Teardown
 }
 
-/*****************************************
- * Test GET DDY
- *****************************************/
-void TestAcceleration::getDDY()
-{
-   Acceleration a;
-   a.setDDY(-1.1);
-   assertEquals(a.getDDY(), -1.1);
+/******************************************************
+* TEST ADD DDXDDY
+* verify that addDDX() and addDDY() increment values correctly
+*******************************************************/
+void TestAcceleration::test_addDDXDDY() {
+   // Setup
+   Acceleration a(0.5, -0.5);
+   // Exercise
+   a.addDDX(1.5);
+   a.addDDY(2.0);
+   // Verify
+   assertEquals(a.getDDX(), 2.0);
+   assertEquals(a.getDDY(), 1.5);
+   // Teardown
 }
 
-/*****************************************
- * Test SET DDX
- *****************************************/
-void TestAcceleration::setDDX()
-{
-   Acceleration a;
-   a.setDDX(5.5);
-   assertEquals(a.getDDX(), 5.5);
-   assertEquals(a.getDDY(), 0.0);
-}
-
-/*****************************************
- * Test SET DDY
- *****************************************/
-void TestAcceleration::setDDY()
-{
-   Acceleration a;
-   a.setDDY(-3.3);
-   assertEquals(a.getDDY(), -3.3);
-   assertEquals(a.getDDX(), 0.0);
-}
-
-/*****************************************
- * Test ADD DDX
- *****************************************/
-void TestAcceleration::addDDX()
-{
+/******************************************************
+* TEST ADD VECTOR
+* verify that add(Acceleration) adds components correctly
+*******************************************************/
+void TestAcceleration::test_addVector() {
+   // Setup
    Acceleration a(1.0, 2.0);
-   a.addDDX(2.5);
-   assertEquals(a.getDDX(), 3.5);
-   assertEquals(a.getDDY(), 2.0);
+   Acceleration b(0.5, -1.0);
+   // Exercise
+   a.add(b);
+   // Verify
+   assertEquals(a.getDDX(), 1.5);
+   assertEquals(a.getDDY(), 1.0);
+   // Teardown
 }
 
-/*****************************************
- * Test ADD DDY
- *****************************************/
-void TestAcceleration::addDDY()
-{
-   Acceleration a(1.0, 2.0);
-   a.addDDY(-1.5);
-   assertEquals(a.getDDX(), 1.0);
-   assertEquals(a.getDDY(), 0.5);
-}
-
-/*****************************************
- * Test ADD Acceleration (vector addition)
- *****************************************/
-void TestAcceleration::add_acceleration()
-{
-   Acceleration a1(2.0, 3.0);
-   Acceleration a2(-1.0, 4.0);
-   a1.add(a2);
-   assertEquals(a1.getDDX(), 1.0);
-   assertEquals(a1.getDDY(), 7.0);
-}
-
-/*****************************************
- * Test SET from angle & magnitude
- *****************************************/
-void TestAcceleration::set_from_angle()
-{
+/******************************************************
+* TEST SET MAGNITUDE
+* verify that set(angle, magnitude) sets components correctly
+*******************************************************/
+void TestAcceleration::test_setMagnitudeAngle() {
+   // Setup
    Acceleration a;
-
-   // 0° ? ddx = 0, ddy = magnitude
-   Angle angle0(0.0);
-   a.set(angle0, 10.0);
-   assertEqualsTolerance(a.getDDX(), 0.0, 1e-4);
-   assertEqualsTolerance(a.getDDY(), 10.0, 1e-4);
-
-   // 90° ? ddx = magnitude, ddy = 0
-   Angle angle90(90.0);
-   a.set(angle90, 5.0);
-   assertEqualsTolerance(a.getDDX(), 5.0, 1e-4);
-   assertEqualsTolerance(a.getDDY(), 0.0, 1e-4);
+   double magnitude = 10.0;
+   // Exercise
+   Angle angle = Angle::fromDegrees(180.0);
+   a.set(angle, magnitude);
+   // Verify
+   assertEquals(a.getDDX(), magnitude * std::sin(angle.toRadians()));
+   assertEquals(a.getDDY(), magnitude * std::cos(angle.toRadians()));
+   // Teardown
 }

@@ -1,6 +1,6 @@
 /***********************************************************************
  * Header File:
- *    Test Body : Test the Body class
+ *    Test Body
  * Author:
  *    Natalia Navarrete Diego Estrada
  * Summary:
@@ -12,80 +12,23 @@
 #include "body.h"
 #include "unitTest.h"
 
- /*******************************
+ /************************************************************************
   * TEST Body
   * A friend class for Body which contains the Body unit tests
-  ********************************/
+  ************************************************************************/
 class TestBody : public UnitTest
 {
 public:
-   void run()
-   {
-      // Constructor
-      construct_default();
-
-      // Setters
-      setPosition();
-      setVelocity();
-      setActiveFlag();
-
-      // Methods
-      updateMovement();
-      updateInactive();
-
-      report("Body");
-   }
+   void run();
 
 private:
-   /*********************************************
-    * name:    DEFAULT CONSTRUCTOR
-    * input:   none
-    * output:  position=(0,0), velocity=(0,0), active=true
-    *********************************************/
-   void construct_default();
-
-   /*********************************************
-    * name:    SET POSITION
-    * input:   pos=(100,200)
-    * output:  getPosition()==(100,200)
-    *********************************************/
-   void setPosition();
-
-   /*********************************************
-    * name:    SET VELOCITY
-    * input:   vel=(5,-3)
-    * output:  getVelocity()==(5,-3)
-    *********************************************/
-   void setVelocity();
-
-   /*********************************************
-    * name:    SET ACTIVE FLAG
-    * input:   active=false
-    * output:  isActive()==false
-    *********************************************/
-   void setActiveFlag();
-
-   /*********************************************
-    * name:    UPDATE MOVEMENT
-    * input:   velocity=(2,3), dt=1.0
-    * output:  position updated to (2,3)
-    *********************************************/
-   void updateMovement();
-
-   /*********************************************
-    * name:    UPDATE INACTIVE
-    * input:   active=false
-    * output:  position unchanged
-    *********************************************/
-   void updateInactive();
-};
-
-
-class BodyConcrete : public Body
-{
-public:
-   void draw() const override
-   {
-      // no-op
-   }
+   void test_expire_setsExpired();
+   void test_onCollision_expires();
+   void test_breakUp_defaultEmpty();
+   void test_intersects_true();
+   void test_intersects_false();
+   void test_computeAcceleration_belowSurface();
+   void test_computeAcceleration_atSurface();
+   void test_update_burnUp();
+   void test_update_physicsIntegration();
 };

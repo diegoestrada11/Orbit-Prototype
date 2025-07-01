@@ -1,73 +1,129 @@
-/***********************************************************************
+ /***********************************************************************
  * Source File:
  *    ORBIT SIMULATOR
  * Author:
  *    Natalia Navarrete, Diego Estrada
  * Summary:
  ************************************************************************/
-
 #include "orbitSimulator.h"
-#include <cmath>
 
-static constexpr double SIMULATOR_FPS = 30.0;
-static constexpr double HOURS_PER_DAY = 24.0;
-static constexpr double MINUTES_PER_HOUR = 60.0;
-static constexpr double TIME_DILATION = (HOURS_PER_DAY * MINUTES_PER_HOUR * 60.0) / MINUTES_PER_HOUR;
-static constexpr double DT = TIME_DILATION / SIMULATOR_FPS;
-static constexpr double EARTH_RADIUS = 6.378e6;  // meters
+static constexpr double FPS = 30.0;
+static constexpr double TIME_DILATION = 24 * 60;
+static constexpr double DT = TIME_DILATION / FPS;
 
 OrbitSimulator::OrbitSimulator(const Position& bounds)
-   : bounds(bounds)
+   : viewBounds(bounds)
 {
-	// Earth center position
-	Position earthCenter(0.0, 0.0);
+   // Create the core satellites
+   bodies.push_back(new Sputnik());
+   bodies.push_back(new GPS());
+   bodies.push_back(new Hubble());
+   bodies.push_back(new Starlink());
+   bodies.push_back(new CrewDragon());
 
-	// Sputnik (Geostationary)
-	sputnik.setPosition(Position(0.0, 42164000.0));
-	sputnik.setVelocity(Velocity(-3100.0, 0.0));
+   // Create the user?controlled ship
+   bodies.push_back(new Ship());
 
-	// GPS (~20200 km altitude)
-	gps.setPosition(Position(0.0, EARTH_RADIUS + 20200000.0));
-	gps.setVelocity(Velocity(-3870.0, 0.0));
+   // Create the earth
+   bodies.push_back(new Earth());
 
-	// Hubble (~569 km altitude)
-	hubble.setPosition(Position(0.0, EARTH_RADIUS + 569000.0));
-	hubble.setVelocity(Velocity(-7700.0, 0.0));
-
-	// Starlink (~550 km altitude)
-	starlink.setPosition(Position(0.0, EARTH_RADIUS + 550000.0));
-	starlink.setVelocity(Velocity(-7750.0, 0.0));
-
-	// ISS (~408 km altitude)
-	iss.setPosition(Position(0.0, EARTH_RADIUS + 408000.0));
-	iss.setVelocity(Velocity(-7700.0, 0.0));
 }
 
-void OrbitSimulator::input(const Interface* pUI)
+OrbitSimulator::~OrbitSimulator()
 {
-   // No user controls yet
-   (void)pUI;
+   for (auto b : bodies)
+      delete b;
+}
+
+void OrbitSimulator::input(const Interface* ui)
+{
+   Ship* ship = nullptr;
+   for (auto b : bodies) {
+      if ((ship = dynamic_cast<Ship*>(b))) break;
+   }
+   if (!ship) return;
+
+   // Rotation
+   if (ui->isLeft())  ship->rotateLeft();
+   if (ui->isRight()) ship->rotateRight();
+
+   // Thrust: toggle based on key state
+   if (ui->isDown())  ship->startThrust();
+   else               ship->stopThrust();
+
+   // Fire projectile on space press
+   if (ui->isSpace()) {
+      Projectile* p = ship->fireProjectile();
+      bodies.push_back(p);
+   }
 }
 
 void OrbitSimulator::display()
 {
-	// Time step
-	sputnik.update(DT);
-	gps.update(DT);
-	hubble.update(DT);
-	starlink.update(DT);
-	iss.update(DT);
+   // Advance physics for everyone
+   advanceAll(DT);
 
-	Position center(0.0, 0.0);
-	ogstream gout(center);
+   // Handle any collisions & spawn debris
+   handleCollisions();
 
-	// Draw Earth
-	gout.drawEarth(center, 0.0);
+   // Remove expired bodies (fragments, projectiles, destroyed sats)
+   removeExpired();
 
-	// Draw all satellites
-	sputnik.draw();
-	gps.draw();
-	hubble.draw();
-	starlink.draw();
-	iss.draw();
+   // Draw Earth + all bodies
+   ogstream gout(Position(0, 0));
+   //gout.drawEarth(Position(0, 0), 0.0);
+   for (auto b : bodies)
+      b->draw();
 }
+
+void OrbitSimulator::advanceAll(double dt)
+{
+   for (auto b : bodies)
+      b->update(dt);
+}
+
+void OrbitSimulator::handleCollisions()
+{
+   vector<Body*> newBodies;
+   const size_t n = bodies.size();
+
+   for (size_t i = 0; i < n; ++i)
+   {
+      for (size_t j = i + 1; j < n; ++j)
+      {
+         Body* A = bodies[i];
+         Body* B = bodies[j];
+         if (!A->isExpired() && !B->isExpired() && A->intersects(*B))
+         {
+            A->onCollision(B);
+            B->onCollision(A);
+
+            // collect any breakups
+            auto piecesA = A->breakUp();
+            auto piecesB = B->breakUp();
+            newBodies.insert(newBodies.end(), piecesA.begin(), piecesA.end());
+            newBodies.insert(newBodies.end(), piecesB.begin(), piecesB.end());
+         }
+      }
+   }
+
+   // append new fragments/parts/projectiles
+   for (auto p : newBodies)
+      bodies.push_back(p);
+}
+
+void OrbitSimulator::removeExpired()
+{
+   auto it = bodies.begin();
+   while (it != bodies.end())
+   {
+      if ((*it)->isExpired())
+      {
+         delete* it;
+         it = bodies.erase(it);
+      }
+      else
+         ++it;
+   }
+}
+
